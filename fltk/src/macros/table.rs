@@ -457,7 +457,7 @@ macro_rules! impl_table_ext {
                         ) {
                             let mut wid = $name::from_widget_ptr(wid as *mut _);
                             let ctx: TableContext = std::mem::transmute(ctx);
-                            let a: *mut Box<
+                            let mut a: Box<Box<
                                 dyn FnMut(
                                     &mut $name,
                                     $crate::table::TableContext,
@@ -468,7 +468,7 @@ macro_rules! impl_table_ext {
                                     i32,
                                     i32,
                                 ),
-                            > = data as *mut Box<
+                            >> = Box::from_raw(data as *mut Box<
                                 dyn FnMut(
                                     &mut $name,
                                     $crate::table::TableContext,
@@ -479,7 +479,7 @@ macro_rules! impl_table_ext {
                                     i32,
                                     i32,
                                 ),
-                            >;
+                            >);
                             let f: &mut (dyn FnMut(
                                 &mut $name,
                                 $crate::table::TableContext,

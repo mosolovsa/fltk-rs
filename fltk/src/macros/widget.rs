@@ -795,7 +795,8 @@ macro_rules! impl_widget_ext {
                     unsafe {
                         unsafe extern "C" fn shim(wid: *mut Fl_Widget, data: *mut std::os::raw::c_void) {
                             let mut wid = $name::from_widget_ptr(wid as *mut _);
-                            let a = data as *mut Box<dyn FnMut(&mut $name)>;
+                            let mut a : Box<Box<dyn FnMut(&mut $name)>> =
+                            Box::from_raw(data as *mut Box<dyn FnMut(&mut $name)>);
                             let f: &mut (dyn FnMut(&mut $name)) = &mut **a;
                             let _ =
                                 std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| f(&mut wid)));
@@ -980,8 +981,8 @@ macro_rules! impl_widget_base {
                         ) -> i32 {
                             let mut wid = $name::from_widget_ptr(wid as *mut _);
                             let ev: $crate::enums::Event = std::mem::transmute(ev);
-                            let a: *mut Box<dyn FnMut(&mut $name, $crate::enums::Event) -> bool> =
-                                data as *mut Box<dyn FnMut(&mut $name, $crate::enums::Event) -> bool>;
+                            let mut a: Box<Box<dyn FnMut(&mut $name, $crate::enums::Event) -> bool>> =
+                                Box::from_raw(data as *mut Box<dyn FnMut(&mut $name, $crate::enums::Event) -> bool>);
                             let f: &mut (dyn FnMut(&mut $name, $crate::enums::Event) -> bool) = &mut **a;
                             let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
                                 match f(&mut wid, ev) {
@@ -1013,8 +1014,8 @@ macro_rules! impl_widget_base {
                     unsafe {
                         unsafe extern "C" fn shim(wid: *mut Fl_Widget, data: *mut std::os::raw::c_void) {
                             let mut wid = $name::from_widget_ptr(wid as *mut _);
-                            let a: *mut Box<dyn FnMut(&mut $name)> =
-                                data as *mut Box<dyn FnMut(&mut $name)>;
+                            let mut a: Box<Box<dyn FnMut(&mut $name)>> =
+                                Box::from_raw(data as *mut Box<dyn FnMut(&mut $name)>);
                             let f: &mut (dyn FnMut(&mut $name)) = &mut **a;
                             let _ =
                                 std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| f(&mut wid)));
@@ -1068,8 +1069,8 @@ macro_rules! impl_widget_base {
                             data: *mut std::os::raw::c_void,
                         ) {
                             let mut wid = $name::from_widget_ptr(wid as *mut _);
-                            let a: *mut Box<dyn FnMut(&mut $name, i32, i32, i32, i32)> =
-                                data as *mut Box<dyn FnMut(&mut $name, i32, i32, i32, i32)>;
+                            let mut a: Box<Box<dyn FnMut(&mut $name, i32, i32, i32, i32)>> =
+                                Box::from_raw(data as *mut Box<dyn FnMut(&mut $name, i32, i32, i32, i32)>);
                             let f: &mut (dyn FnMut(&mut $name, i32, i32, i32, i32)) = &mut **a;
                             let _ = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
                                 f(&mut wid, x, y, w, h)

@@ -490,8 +490,8 @@ impl TextBuffer {
                 } else {
                     CStr::from_ptr(deleted_text).to_string_lossy().to_string()
                 };
-                let a: *mut Box<dyn FnMut(i32, i32, i32, i32, &str)> =
-                    data as *mut Box<dyn for<'r> FnMut(i32, i32, i32, i32, &'r str)>;
+                let mut a: Box<Box<dyn FnMut(i32, i32, i32, i32, &str)>> =
+                    Box::from_raw(data as *mut Box<dyn for<'r> FnMut(i32, i32, i32, i32, &'r str)>);
                 let f: &mut (dyn FnMut(i32, i32, i32, i32, &str)) = &mut **a;
                 let _ = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
                     f(
@@ -530,8 +530,8 @@ impl TextBuffer {
                 } else {
                     CStr::from_ptr(deleted_text).to_string_lossy().to_string()
                 };
-                let a: *mut Box<dyn FnMut(i32, i32, i32, i32, &str)> =
-                    data as *mut Box<dyn for<'r> FnMut(i32, i32, i32, i32, &'r str)>;
+                let mut a: Box<Box<dyn FnMut(i32, i32, i32, i32, &str)>> =
+                    Box::from_raw(data as *mut Box<dyn for<'r> FnMut(i32, i32, i32, i32, &'r str)>);
                 let f: &mut (dyn FnMut(i32, i32, i32, i32, &str)) = &mut **a;
                 let _ = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
                     f(

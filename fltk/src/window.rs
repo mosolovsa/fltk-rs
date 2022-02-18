@@ -605,8 +605,8 @@ impl OverlayWindow {
         unsafe {
             unsafe extern "C" fn shim(wid: *mut Fl_Widget, data: *mut raw::c_void) {
                 let mut wid = OverlayWindow::from_widget_ptr(wid as *mut _);
-                let a: *mut Box<dyn FnMut(&mut OverlayWindow)> =
-                    data as *mut Box<dyn FnMut(&mut OverlayWindow)>;
+                let mut a: Box<Box<dyn FnMut(&mut OverlayWindow)>> =
+                    Box::from_raw(data as *mut Box<dyn FnMut(&mut OverlayWindow)>);
                 let f: &mut (dyn FnMut(&mut OverlayWindow)) = &mut **a;
                 let _ = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| f(&mut wid)));
             }
